@@ -1,3 +1,3 @@
 let
   rust = import ../nix/rust.nix;
-in rust.build ./.
+in rust.build ./. ./rust-toolchain
