@@ -5,37 +5,51 @@ let
   # Nix overlays from Mozilla
   mozillaOverlay = import sources.nixpkgs-mozilla;
 
-  # Apply the Mozilla overlay to get Rust-specific Nix stuff
-  pkgs = import sources.nixpkgs {
-    overlays = [
-      mozillaOverlay
-    ];
-  };
-
-  # Load Naersk from the Niv sources
-  naersk = callPackage sources.naersk {};
-
-  # Utilities
-  inherit (pkgs) callPackage rustChannelOf;
+  # Apply the Mozilla overlay to get Rust-specific Nix stuff (tied to specific toolchain)
+  rustPkgs = toolchain:
+    let
+      rust = rustVersion toolchain;
+    in
+      import sources.nixpkgs {
+        overlays = [
+          mozillaOverlay
+          (self: super:
+            {
+              rustc = rust;
+              cargo = rust;
+            }
+          )
+        ];
+      };
 
   # Provide a version of Rust specified in the rust-toolchain file
-  rust = toolchain:
-    (pkgs.rustChannelOf {
-      rustToolchain = toolchain;
-    }).rust;
+  rustVersion = toolchain:
+    let
+      pkgs = rustPkgs toolchain;
+    in
+      (pkgs.rustChannelOf {
+        rustToolchain = toolchain;
+      }).rust;
 
   # Build the Rust project in the specified directory
-  buildRustBin = srcs:
-    naersk.buildPackage srcs;
+  # Important drawback: Naersk can't be pinned to specific Rust versions :/
+  buildRustBin = srcs: toolchain:
+    let
+      pkgs = rustPkgs toolchain;
+
+      naersk = pkgs.callPackage sources.naersk {};
+    in naersk.buildPackage srcs;
 
   # Provide a Rust shell based on a rust-toolchain file
   rustShell = toolchain:
-    pkgs.mkShell {
+    let
+      pkgs = rustPkgs toolchain;
+    in pkgs.mkShell {
       buildInputs = with pkgs; [
         cargo-edit
         cargo-watch
         git
-        (rust toolchain)
+        (rustVersion toolchain)
       ];
     };
 in {
