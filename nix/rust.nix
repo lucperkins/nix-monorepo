@@ -20,7 +20,7 @@ let
 
   # Build the Rust project in the specified directory with the specified toolchain
   # Important drawback: Naersk doesn't work well with some Rust toolchains :(
-  buildRustBin = srcs: toolchain:
+  rustBuild = srcs: toolchain:
     let
       rust = rustVersion toolchain;
 
@@ -44,7 +44,7 @@ let
       ];
     };
 in {
+  build = rustBuild;
+
   shell = rustShell;
-  
-  build = buildRustBin;
 }
