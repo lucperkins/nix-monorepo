@@ -1,16 +1,24 @@
 let
   sources = import ./sources.nix;
-  mozilla = import sources.nixpkgs-mozilla;
+  mozillaOverlay = import sources.nixpkgs-mozilla;
   pkgs = import sources.nixpkgs {
-    overlays = [ mozilla ];
+    overlays = [
+      mozillaOverlay
+    ];
   };
 
-  inherit (pkgs) rustChannelOf;
+  naersk = callPackage sources.naersk {};
 
+  inherit (pkgs) callPackage rustChannelOf;
+
+  # Provide a version of Rust specified in the rust-toolchain file
   rust = toolchain:
     (pkgs.rustChannelOf {
       rustToolchain = toolchain;
     }).rust;
+
+  buildRustBin = srcs:
+    naersk.buildPackage srcs;
 in {
   pkgs = pkgs;
 
@@ -21,4 +29,6 @@ in {
         (rust toolchain)
       ];
     };
+  
+  build = buildRustBin;
 }
