@@ -4,6 +4,8 @@
 
 This is a somewhat tongue-in-cheek project intended to show you how you might use Nix in a larger, multi-language project. Each of the language directories here contains a simple, "hello world"-style project for that language that provides both a Nix build (via `default.nix`) and a Nix shell (via `shell.nix`). The current languages:
 
+* [Elixir](./elixir)
+* [Go](./golang)
 * [Rust](./rust)
 
 A few characteristics of the project worth mentioning:
