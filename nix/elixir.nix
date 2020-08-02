@@ -1,3 +1,5 @@
+# This approach is indebted to: https://ghedam.at/15443/a-nix-shell-for-developing-elixir
+
 let
   sources = import ./sources.nix;
   pkgs = import sources.nixpkgs {};
