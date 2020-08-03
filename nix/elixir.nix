@@ -14,6 +14,7 @@ let
 
   elixirShell = pkgs.mkShell {
     buildInputs = with pkgs; inputs
+      # OS-specific notification tools for "mix phx.server"
       ++ optional isLinux inotify-tools
       ++ optionals isDarwin (with darwin.apple_sdk.frameworks; [
         CoreFoundation

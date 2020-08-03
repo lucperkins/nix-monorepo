@@ -3,14 +3,15 @@ let
   sources = import ./sources.nix;
   pkgs = import sources.nixpkgs {};
 
-  inherit (pkgs.lib) fakeSha256;
+  # Go tools
+  inputs = with pkgs; [
+    git
+    go
+    goimports
+  ];
 
   goShell = pkgs.mkShell {
-    buildInputs = with pkgs; [
-      git
-      go
-      goimports
-    ];
+    buildInputs = inputs;
   };
 in {
   shell = goShell;

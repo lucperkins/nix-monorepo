@@ -18,7 +18,7 @@ let
       rustToolchain = toolchain;
     }).rust;
 
-  # Provide a Rust shell based on a rust-toolchain file
+  # Provide a Rust shell based on the local rust-toolchain file
   rustShell = toolchain:
     let
       rust = rustVersion toolchain;
