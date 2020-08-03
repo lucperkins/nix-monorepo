@@ -5,8 +5,6 @@ let
 
   inherit (pkgs.lib) fakeSha256;
 
-  buildGoBin = pkgs.buildGoModule;
-
   goShell = pkgs.mkShell {
     buildInputs = with pkgs; [
       git
@@ -16,8 +14,4 @@ let
   };
 in {
   shell = goShell;
-
-  build = buildGoBin;
-
-  fakeSha = fakeSha256;
 }
