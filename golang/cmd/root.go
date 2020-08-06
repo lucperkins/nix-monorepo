@@ -10,7 +10,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use: "hello",
 	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Println("Hello from this Nix-build executable!")
+		fmt.Println("Hello from this Nix-built executable!")
 	},
 }
 

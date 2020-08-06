@@ -10,9 +10,16 @@ let
     goimports
   ];
 
+  goBuild = name: src:
+    pkgs.buildGoModule {
+      inherit name src;
+    };
+
   goShell = pkgs.mkShell {
     buildInputs = inputs;
   };
 in {
+  build = goBuild;
+  
   shell = goShell;
 }
